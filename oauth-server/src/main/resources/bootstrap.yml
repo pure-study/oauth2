@@ -1,0 +1,21 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: oauth-server
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/security?useSSL=false&userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  main:
+    allow-bean-definition-overriding: true #允许我们自己覆盖spring放入到IOC容器中的对象
+
+mybatis:
+  type-aliases-package: com.cheetah.domain
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.cheetah.center: debug
