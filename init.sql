@@ -1,4 +1,9 @@
+-- DROP DATABASE oauth;
+CREATE DATABASE oauth;
+USE oauth;
+
 -- 用户相关
+DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(64) NOT NULL COMMENT '姓名',
@@ -6,21 +11,24 @@ CREATE TABLE `sys_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
+DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_name` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
 
+DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `role_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='用户权限表'
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='用户权限表';
 
 
 -- oauth2相关
+DROP TABLE IF EXISTS `oauth_access_token`;
 CREATE TABLE `oauth_access_token` (
   `token_id` varchar(256) DEFAULT NULL COMMENT 'MD5加密的access_token的值',
   `token` blob COMMENT 'OAuth2AccessToken.java对象序列化后的二进制数据',
@@ -31,6 +39,7 @@ CREATE TABLE `oauth_access_token` (
   `refresh_token` varchar(256) DEFAULT NULL COMMENT 'MD5加密果的refresh_token的值'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='访问令牌表';
 
+DROP TABLE IF EXISTS `oauth_approvals`;
 CREATE TABLE `oauth_approvals` (
   `userid` varchar(256) DEFAULT NULL COMMENT '登录的用户名',
   `clientid` varchar(256) DEFAULT NULL COMMENT '客户端ID',
@@ -40,7 +49,7 @@ CREATE TABLE `oauth_approvals` (
   `lastmodifiedat` datetime DEFAULT NULL COMMENT '最终修改时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='授权记录表';
 
-
+DROP TABLE IF EXISTS `oauth_client_details`;
 CREATE TABLE `oauth_client_details` (
   `client_id` varchar(256) NOT NULL COMMENT '客户端ID',
   `resource_ids` varchar(256) DEFAULT NULL COMMENT '资源ID集合,多个资源时用逗号(,)分隔',
@@ -56,7 +65,7 @@ CREATE TABLE `oauth_client_details` (
   PRIMARY KEY (`client_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='客户端信息';
 
-
+DROP TABLE IF EXISTS `oauth_client_token`;
 CREATE TABLE `oauth_client_token` (
   `token_id` varchar(256) DEFAULT NULL COMMENT 'MD5加密的access_token值',
   `token` blob COMMENT 'OAuth2AccessToken.java对象序列化后的二进制数据',
@@ -65,15 +74,28 @@ CREATE TABLE `oauth_client_token` (
   `client_id` varchar(256) DEFAULT NULL COMMENT '客户端ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='客户端授权令牌表';
 
-
+DROP TABLE IF EXISTS `oauth_code`;
 CREATE TABLE `oauth_code` (
   `code` varchar(256) DEFAULT NULL COMMENT '授权码(未加密)',
   `authentication` blob COMMENT 'AuthorizationRequestHolder.java对象序列化后的二进制数据'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='授权码表';
 
-
+DROP TABLE IF EXISTS `oauth_refresh_token`;
 CREATE TABLE `oauth_refresh_token` (
   `token_id` varchar(256) DEFAULT NULL COMMENT 'MD5加密过的refresh_token的值',
   `token` blob COMMENT 'OAuth2RefreshToken.java对象序列化后的二进制数据',
   `authentication` blob COMMENT 'OAuth2Authentication.java对象序列化后的二进制数据'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='更新令牌表';
+
+INSERT INTO oauth_client_details
+(client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, access_token_validity, autoapprove)
+VALUES
+('cheetah_one', 'product_api', '$2a$10$RLK1D/2CtDxMdh48KDXpPu.pktIR6oE8FHgqxxxhIOpeuTZzmqE3K',
+ 'read,write', 'client_credentials,implicit,authorization_code,refresh_token,password',
+ 'https://www.baidu.com','43200','false');
+
+INSERT INTO sys_user (username, password)
+VALUES ('zhangsan', '$2a$10$RLK1D/2CtDxMdh48KDXpPu.pktIR6oE8FHgqxxxhIOpeuTZzmqE3K');
+
+INSERT INTO sys_user (username, password)
+VALUES ('lisi', '$2a$10$RLK1D/2CtDxMdh48KDXpPu.pktIR6oE8FHgqxxxhIOpeuTZzmqE3K');

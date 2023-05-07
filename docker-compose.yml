@@ -1,0 +1,25 @@
+version: '3.1'
+services:
+  db:
+    image: mysql:8.0.32
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    volumes:
+      - $PWD/mysql/data:/var/lib/mysql
+      - $PWD/init.sql:/init.sql
+
+  oauth-server:
+    image: oauth/oauth-server:0.0.1-SNAPSHOT
+    ports:
+      - "9001:9001"
+    depends_on:
+      - db
+
+  oauth-product:
+    image: oauth/oauth-product:0.0.1-SNAPSHOT
+    ports:
+      - "9002:9002"
+    depends_on:
+      - db
