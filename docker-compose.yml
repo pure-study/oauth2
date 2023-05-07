@@ -8,7 +8,7 @@ services:
       - MYSQL_ROOT_PASSWORD=123456
     volumes:
       - $PWD/mysql/data:/var/lib/mysql
-      - $PWD/init.sql:/init.sql
+      - $PWD/mysql/init.sql:/init.sql
 
   oauth-server:
     image: oauth/oauth-server:0.0.1-SNAPSHOT
